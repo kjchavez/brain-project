@@ -53,7 +53,7 @@ class VisionHandler(object):
             self.handle(data)
 
 def main():
-    handler = VisionHandler("ipc://test")
+    handler = VisionHandler("tcp://0.0.0.0:5000")
     handler.start()
 
 if __name__ == "__main__":
