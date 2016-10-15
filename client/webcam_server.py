@@ -1,10 +1,11 @@
 import sys
+import socket
 import copy
-import io
 import time
 import threading
 import cv2
 import argparse
+import zmq
 
 import api.vision_pb2
 
@@ -56,9 +57,9 @@ def get_encoded_image():
         return None
 
 def get_perceived_image():
-    data = get_encoded_image()
-    if data is None:
-        return None
+    data = None
+    while data is None:
+        data = get_encoded_image()
 
     perceived_image = api.vision_pb2.PerceivedImage()
     perceived_image.image.data = data
@@ -67,11 +68,22 @@ def get_perceived_image():
     perceived_image.source = "test"
     return perceived_image
 
+def send_proto(socket, proto):
+    """ Sends a serialized version of the proto object via the given socket.
+    """
+    socket.send(proto.SerializeToString())
+
 def main():
+    context = zmq.Context()
+    sock = context.socket(zmq.PUB)
+    remote_ip = socket.gethostbyname("thezoo.noip.me")
+    addr = "tcp://%s:5000" % remote_ip
+    sock.connect(addr)
     while True:
         time.sleep(1.0)
         perceived_image = get_perceived_image()
-        print perceived_image
+        send_proto(sock, perceived_image)
+        print "Sent image."
 
 if __name__ == "__main__":
     main()
