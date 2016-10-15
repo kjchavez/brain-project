@@ -12,6 +12,7 @@ import api.vision_pb2
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--device", type=int, default=0)
+parser.add_argument("--hostname", default="jarvis.local") 
 
 args = parser.parse_args()
 
@@ -76,7 +77,7 @@ def send_proto(socket, proto):
 def main():
     context = zmq.Context()
     sock = context.socket(zmq.PUB)
-    remote_ip = socket.gethostbyname("thezoo.noip.me")
+    remote_ip = socket.gethostbyname(args.hostname)
     addr = "tcp://%s:5000" % remote_ip
     sock.connect(addr)
     while True:
