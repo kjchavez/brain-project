@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package brain.vision;
+
+message Image {
+  // Raw data of the image, possibly compressed.
+  bytes data = 1;
+
+  // Type of encoding used for the image data. This will typically be "jpeg".
+  string encoding = 2;
+}
+
+message PerceivedImage {
+  Image image = 1;
+
+  // The origin of this perception, kept as a string for flexibility as the
+  // number of potential sources increases.
+  string source = 2;
+
+  // Time at which the image was perceived.
+  google.protobuf.Timestamp timestamp = 3;
+}
