@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package brain.action;
+
+message DisplayText {
+  string text = 1;
+}
+
+message Action {
+  oneof action_type {
+    DisplayText display_text = 1;
+  }
+}
