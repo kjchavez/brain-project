@@ -72,13 +72,13 @@ def get_perceived_image():
 def send_proto(socket, proto):
     """ Sends a serialized version of the proto object via the given socket.
     """
-    socket.send(proto.SerializeToString())
+    socket.send("image " + proto.SerializeToString())
 
 def main():
     context = zmq.Context()
     sock = context.socket(zmq.PUB)
     remote_ip = socket.gethostbyname(args.hostname)
-    addr = "tcp://%s:5000" % remote_ip
+    addr = "tcp://%s:9000" % remote_ip
     sock.connect(addr)
     while True:
         time.sleep(1.0)
