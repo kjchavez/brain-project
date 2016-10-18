@@ -1,0 +1,37 @@
+# ==============================================================================
+#
+#             Configuration for bringing up a 'brain' system.
+#
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+#   Sensory configuration
+# ------------------------------------------------------------------------------
+
+# External facing address for remote nodes to publish sensory data to. This
+# should generally listen on all available IP addresses (i.e. use 0.0.0.0:port)
+sensory_input_addr: "tcp://0.0.0.0:9000"
+
+# Internal address to which sensory data will be published. This is accessible
+# to all ThoughtProcesses.
+sensory_output_addr: "ipc://sensory"
+
+
+# ------------------------------------------------------------------------------
+#   Action configuration
+# ------------------------------------------------------------------------------
+
+# Externally visible address for remote nodes that receive action directives to
+# subcribe to.
+#
+# NOTE: This might change in favor of bound addresses by the remote nodes, and
+# a smart action directive layer that figures out the address of the appropriate
+# device to send the directive to.
+action_directive_addr: "tcp://0.0.0.0:9001"
+
+# Internal address to which various publishers of action directives should send
+# their requests. These will be unified and sent out to remote nodes as
+# appropriate.
+action_directive_proxy: "ipc://action-directive"
+

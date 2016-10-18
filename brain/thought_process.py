@@ -54,7 +54,7 @@ class ThoughtProcess(object):
             sock = context.socket(zmq.SUB)
             sock.setsockopt(zmq.SUBSCRIBE, topic)
             sock.connect(address)
-            input_sockets[sock] = name
+            input_sockets[sock] = (name, topic)
 
         # Create an output socket for this node.
         output_socket = context.socket(zmq.PUB)
@@ -80,14 +80,17 @@ class ThoughtProcess(object):
                     output_socket.send(sock.recv())
 
                 if socks[sock] == zmq.POLLIN:
-                    input_name = input_sockets[sock]
+                    input_name, topic = input_sockets[sock]
 
                     # Find the specialized handler, or fall back to the generic
                     # input signal handler
                     handler = self.handlers.get(input_name,
                                                 self.handle_input_signal)
-                    logging.debug("Received input from [%s].", input_name)
+                    logging.debug("ThoughtProcess:%s received input from "
+                                  "[%s].", self.name, input_name)
                     data = sock.recv()
+                    if topic:
+                        data = data.split(" ", 1)[-1]
 
                     # Run the handler in a separate thread so we aren't
                     # concerned with blocking behavior.
