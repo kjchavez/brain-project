@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package brain.object_recognition;
+
+message RecognizedObjects {
+  message RecognizedObject {
+    string name = 1;
+  }
+
+  repeated RecognizedObject object = 1;
+}

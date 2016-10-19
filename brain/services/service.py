@@ -49,10 +49,14 @@ class Service(object):
             t.daemon = True
             t.start()
 
+    def start(self):
         # Fire up the router-dealer mechanism.
         t = threading.Thread(target=self.run_router_dealer)
         t.daemon = True
         t.start()
+
+    def run(self):
+        self.run_router_dealer()
 
     def run_router_dealer(self):
         context = zmq.Context.instance()

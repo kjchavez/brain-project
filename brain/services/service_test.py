@@ -19,6 +19,8 @@ def fake_handler(request):
     return response
 
 service = Service("inproc://test", FakeProto, FakeProto, fake_handler)
+service.start()
+
 stub = ServiceStub("inproc://test", FakeProto, FakeProto)
 
 response = stub(FakeProto("test request"))

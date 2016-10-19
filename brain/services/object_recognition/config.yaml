@@ -1,0 +1,7 @@
+port: 10001
+
+# Configuration for the object recognizer; namely where to find the trained
+# model and associated data.
+graph_def_file: "brain/services/object_recognition/classify_image_graph_def.pb"
+label_lookup_path: "brain/services/object_recognition/imagenet_2012_challenge_label_map_proto.pbtxt"
+uid_lookup_path: "brain/services/object_recognition/imagenet_synset_to_human_label_map.txt"
