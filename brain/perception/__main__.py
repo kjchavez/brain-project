@@ -22,7 +22,7 @@ receiver = SensoryReceiver(config['sensory_input_addr'],
                            config['sensory_output_addr'])
 
 processes = [
-    ImageMemory("inproc://image-memory",
+    ImageMemory("inproc://image-memory", config['action_directive_proxy'],
                 sensory_output_addr=config['sensory_output_addr']),
 ]
 

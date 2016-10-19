@@ -3,12 +3,14 @@ import threading
 import uuid
 import zmq
 
+import brain.action.basal_ganglia
+
 class ThoughtProcess(object):
     """ Abstract base class for processes that integrate signals over time and
     publish new ephemeral signals. These can be thought of as creating
     higher-level abstractions over low-level signals.
     """
-    def __init__(self, name, address):
+    def __init__(self, name, address, action_proxy_addr):
         """
         Args:
             address: fixed address where signals are published
@@ -24,6 +26,7 @@ class ThoughtProcess(object):
         self.input_addresses = {}
 
         self.proxy_pub_address = "inproc://%s" % (str(uuid.uuid4()),)
+        self.action_proxy_addr = action_proxy_addr
 
     def handle_input_signal(self, data):
         raise NotImplementedError("Handler not implemented.")
@@ -32,6 +35,10 @@ class ThoughtProcess(object):
         self.input_addresses[name] = (source_addr, topic)
         self.handlers[name] = handler
         # TODO: Signal the running loop to add a new socket!
+
+    def propose(self, action_proto):
+        logging.debug("Proposing action:\n%s", action_proto)
+        brain.action.basal_ganglia.propose(action_proto, self.action_proxy_addr)
 
     def publish(self, signal, topic=None):
         context = zmq.Context.instance()
