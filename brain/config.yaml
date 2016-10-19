@@ -15,7 +15,7 @@ sensory_input_addr: "tcp://0.0.0.0:9000"
 
 # Internal address to which sensory data will be published. This is accessible
 # to all ThoughtProcesses.
-sensory_output_addr: "ipc://sensory"
+sensory_output_addr: "ipc:///tmp/sensory"
 
 
 # ------------------------------------------------------------------------------
@@ -33,5 +33,5 @@ action_directive_addr: "tcp://0.0.0.0:9001"
 # Internal address to which various publishers of action directives should send
 # their requests. These will be unified and sent out to remote nodes as
 # appropriate.
-action_directive_proxy: "ipc://action-directive"
+action_directive_proxy: "ipc:///tmp/action-directive"
 
