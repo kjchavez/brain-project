@@ -1,0 +1,6 @@
+# Datafiles
+imagenet_*txt
+*.pb
+
+# Directories of sample data
+test_images/
