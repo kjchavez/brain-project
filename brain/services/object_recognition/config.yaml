@@ -1,4 +1,8 @@
+name: "object_recognition"
+address: "thezoo.noip.me"  # Resolvable to ip address
 port: 10001
+request: "Image"
+response: "RecognizedObjects"
 
 # Configuration for the object recognizer; namely where to find the trained
 # model and associated data.
