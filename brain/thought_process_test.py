@@ -4,9 +4,6 @@ import logging
 import time
 import zmq
 
-#FORMAT = "%(asctime)-15s %(message)s"
-#logging.basicConfig(format=FORMAT, level=logging.DEBUG)
-
 def handler(data):
     print "Processing:", data
 
