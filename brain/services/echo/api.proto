@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package brain.echo;
+
+message EchoRequest {
+    string text = 1;
+}
+
+message EchoResponse {
+    string text = 1;
+}

@@ -1,0 +1,5 @@
+name: echo
+address: "localhost"
+port: 12345
+request: EchoRequest
+response: EchoResponse

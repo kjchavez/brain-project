@@ -56,6 +56,7 @@ class Service(object):
         t.start()
 
     def run(self):
+        logging.info("Starting service [${name}] at %s.", self.addr)
         self.run_router_dealer()
 
     def run_router_dealer(self):
