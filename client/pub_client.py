@@ -19,4 +19,4 @@ class PublishClient(object):
         if not isinstance(data, str):
             data = data.SerializeToString()
 
-        self.sock.send("%s " + data)
+        self.sock.send(self.topic + " " + data)
