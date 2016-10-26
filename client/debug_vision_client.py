@@ -5,15 +5,23 @@ import socket
 import time
 import zmq
 
+from client.pub_client import PublishClient
 import api.vision_pb2
 
-class DebugVisionClient(object):
-    """ Sends each image from 'image_files' to the sensory endpoint. """
-    def __init__(self, server_addr, image_files_iter):
-        self.image_files_iter = image_files_iter
-        context = zmq.Context()
-        self.sock = context.socket(zmq.PUB)
-        self.sock.connect(server_addr)
+def isimage(filename):
+    return filename.endswith('jpg')
+
+class DebugVisionClient(PublishClient):
+    def __init__(self, hostname, port, imagedir=None):
+        PublishClient.__init__(self, hostname, port, "image")
+        if imagedir is not None:
+            image_files = [os.path.join(imagedir, f) for f in
+                           os.listdir(imagedir) if
+                           isimage(os.path.join(imagedir, f))]
+
+            self.image_files_iter = iter(image_files)
+        else:
+            self.image_files_iter = None
 
     def send_file(self, image_file):
         if not image_file and self.image_files_iter is None:
@@ -30,6 +38,10 @@ class DebugVisionClient(object):
                 return
 
         image = cv2.imread(image_file, 1)
+        if image is None:
+            print "Failed to read image."
+            return
+
         data = cv2.imencode('.jpg', image)[1].tostring()
 
         perceived_image = api.vision_pb2.PerceivedImage()
@@ -38,38 +50,5 @@ class DebugVisionClient(object):
         perceived_image.timestamp.FromMilliseconds(int(time.time()*1000))
         perceived_image.source = "test"
 
-        self.sock.send("image " + perceived_image.SerializeToString())
-
-def isimage(filename):
-    return filename.endswith('jpg')
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--imagedir", default=None,
-                        help="Directory of images to cycle through.")
-    parser.add_argument("--hostname", default="jarvis.local")
-    parser.add_argument("--port", type=int, default=9000)
-
-    args = parser.parse_args()
-
-    addr = "tcp://%s:%d" % (socket.gethostbyname(args.hostname), args.port)
-    if args.imagedir:
-        path = args.imagedir
-        image_files = [os.path.join(path, f) for f in os.listdir(path) if
-                       isimage(os.path.join(path, f))]
-
-        client = DebugVisionClient(addr, iter(image_files))
-    else:
-        client = DebugVisionClient(addr, None)
-
-    if args.imagedir is not None:
-        print "Use an empty image filename to simply proceed to next image in",
-        print args.imagedir
-
-    while True:
-        filename = raw_input("Enter image file: ")
-        client.send_file(filename)
-
-if __name__ == "__main__":
-    main()
+        self.send_data(perceived_image)
 
