@@ -5,6 +5,7 @@ import yaml
 
 from brain.perception.sensory_receiver import SensoryReceiver
 from brain.perception.vision.receiver import ImageMemory
+from brain.reactive.echo import EchoWords
 
 
 parser = argparse.ArgumentParser()
@@ -24,6 +25,8 @@ receiver = SensoryReceiver(config['sensory_input_addr'],
 processes = [
     ImageMemory("inproc://image-memory", config['action_directive_proxy'],
                 sensory_output_addr=config['sensory_output_addr']),
+    EchoWords("inproc://echo-words", config['action_directive_proxy'],
+              sensory_output_addr=config['sensory_output_addr'])
 ]
 
 for p in processes:
