@@ -1,6 +1,8 @@
 from brain.thought_process import ThoughtProcess
 
 from api.text_pb2 import RawText
+from brain.services.stubs import ServiceStubs
+from brain.services.echo.api_pb2 import *
 
 class EchoWords(ThoughtProcess):
     def __init__(self, address, action_proxy_addr, sensory_output_addr):
@@ -10,4 +12,8 @@ class EchoWords(ThoughtProcess):
     def echo(self, data):
         rt = RawText()
         rt.ParseFromString(str(data))
-        print "Received ", rt
+        echo_fn = ServiceStubs.get("echo")
+        request = EchoRequest()
+        request.text = rt.text
+        response = echo_fn(request)
+        print "EchoResponse:", response

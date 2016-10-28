@@ -23,9 +23,11 @@ class ServiceStub(object):
         sock = context.socket(zmq.REQ)
         sock.connect(self.addr)
 
+        logging.debug("Issuing request:\n%s", request)
         sock.send(request.SerializeToString())
         response = self.ResponseType()
         response.ParseFromString(sock.recv())
+        logging.debug("Received response:\n%s", response)
 
         sock.close()
         return response
